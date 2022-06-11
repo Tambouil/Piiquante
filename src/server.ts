@@ -1,6 +1,7 @@
 import "./app";
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
+import { config } from "./config/config";
 import { signup } from "./controllers/user";
 
 const app: Express = express();
@@ -22,5 +23,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
+  console.log(
+    `⚡️[server]: Server is running at https://localhost:${config.server.port}`
+  );
 });
