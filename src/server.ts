@@ -1,29 +1,66 @@
-import "./app";
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
+import mongoose from "mongoose";
 import cors from "cors";
+import http from "http";
 import { config } from "./config/config";
-import { signup } from "./controllers/user";
+import controller from "./controllers/User";
 
 const app: Express = express();
-const port = 3000;
 
-// Add a list of allowed origins.
-const allowedOrigins = ["http://localhost:3000"];
-const options: cors.CorsOptions = {
-  origin: allowedOrigins,
+/** Connect to Mongo */
+mongoose
+  .connect(config.db.url, { retryWrites: true, w: "majority" })
+  .then(() => {
+    console.log("MongoDB connected successfully.");
+    StartServer();
+  })
+  .catch((error) => console.error(error));
+
+/** Only Start Server if MongoDB is connected */
+const StartServer = () => {
+  /** Log the request */
+  app.use((req, res, next) => {
+    /** Log the req */
+    console.log(
+      `Incomming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`
+    );
+
+    res.on("finish", () => {
+      /** Log the res */
+      console.log(
+        `Result - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}] - STATUS: [${res.statusCode}]`
+      );
+    });
+
+    next();
+  });
+
+  app.use(cors());
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+
+  /** Routes */
+  app.post("/api/auth/signup", controller.signup);
+  app.post("/api/auth/login", controller.login);
+
+  /** Healthcheck */
+  app.get("/", (req, res) => {
+    res.status(200).json({ message: "Server Working" });
+  });
+
+  /** Error handling */
+  app.use((req, res) => {
+    const error = new Error("Not found");
+    console.error(error);
+    res.status(404).json({
+      message: error.message,
+    });
+  });
+
+  const server = http.createServer(app);
+  server.listen(config.server.port, () => {
+    console.log(
+      `⚡️[server]: Server is running at https://localhost:${config.server.port}`
+    );
+  });
 };
-// Then pass these options to cors:
-app.use(cors(options));
-app.use(express.json());
-
-app.post("/api/auth/signup", signup);
-
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
-});
-
-app.listen(port, () => {
-  console.log(
-    `⚡️[server]: Server is running at https://localhost:${config.server.port}`
-  );
-});
