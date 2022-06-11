@@ -6,13 +6,14 @@ interface IUser {
   email: string;
   password: string;
 }
+interface IUserModel extends IUser, Document {}
 
 // 2. Create a Schema corresponding to the document interface.
-const userSchema = new Schema<IUser>({
+const userSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
 });
 userSchema.plugin(uniqueValidator);
 
 // 3. Create a Model.
-export const User = model<IUser>("User", userSchema);
+export const User = model<IUserModel>("User", userSchema);

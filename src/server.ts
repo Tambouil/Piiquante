@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import http from "http";
 import { config } from "./config/config";
-import controller from "./controllers/User";
+import userRoutes from "./routes/User";
+import saucesRoutes from "./routes/Sauces";
 
 const app: Express = express();
 
@@ -40,8 +41,8 @@ const StartServer = () => {
   app.use(express.json());
 
   /** Routes */
-  app.post("/api/auth/signup", controller.signup);
-  app.post("/api/auth/login", controller.login);
+  app.use("/api/auth", userRoutes);
+  app.use("/api", saucesRoutes);
 
   /** Healthcheck */
   app.get("/", (req, res) => {
