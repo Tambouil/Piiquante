@@ -46,7 +46,3 @@ const fileFilter = (
 export default multer({ storage: storage, fileFilter: fileFilter }).single(
   "image"
 );
-
-// import multer from "multer";
-
-// export const upload = multer({ dest: "images/" }).single("image");

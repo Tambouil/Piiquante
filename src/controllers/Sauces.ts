@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Sauce from "../models/Sauce";
 
-const createSauce = (req: Request, res: Response, next: NextFunction) => {
+const createSauce = async (req: Request, res: Response, next: NextFunction) => {
   const sauceObject = JSON.parse(req.body.sauce);
   const newSauce = new Sauce({
     ...sauceObject,
@@ -9,17 +9,29 @@ const createSauce = (req: Request, res: Response, next: NextFunction) => {
       req.file!.filename
     }`,
   });
-  newSauce
-    .save()
-    .then(() => res.status(201).json({ message: "Objet enregistré !" }))
-    .catch((error) => res.status(400).json({ error }));
+  try {
+    await newSauce.save();
+    res.status(201).json({ message: "Sauce created !" });
+  } catch (error) {
+    res.status(409).json({ error });
+  }
 };
 
-const readSauce = (req: Request, res: Response, next: NextFunction) => {
-  console.log("hello");
-  Sauce.find({}).then((sauce) => {
-    res.send(sauce);
-  });
+const readSauce = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const sauces = await Sauce.find({});
+    res.send(sauces);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
 };
 
-export default { readSauce, createSauce };
+const readOneSauce = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.log("hello world");
+};
+
+export default { readSauce, createSauce, readOneSauce };
