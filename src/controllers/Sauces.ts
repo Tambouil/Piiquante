@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import { Sauce } from "../models/Sauce";
+import Sauce from "../models/Sauce";
 
 const createSauce = (req: Request, res: Response, next: NextFunction) => {
-  // const sauceObject = JSON.parse(req.body.sauce);
-  // delete sauceObject._id;
+  const sauceObject = JSON.parse(req.body.sauce);
   const newSauce = new Sauce({
-    ...req.body,
+    ...sauceObject,
+    imageUrl: `${req.protocol}://${req.get("host")}/src/public/images/${
+      req.file!.filename
+    }`,
   });
   newSauce
     .save()
@@ -15,7 +17,9 @@ const createSauce = (req: Request, res: Response, next: NextFunction) => {
 
 const readSauce = (req: Request, res: Response, next: NextFunction) => {
   console.log("hello");
-  res.send("hello");
+  Sauce.find({}).then((sauce) => {
+    res.send(sauce);
+  });
 };
 
 export default { readSauce, createSauce };

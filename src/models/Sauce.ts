@@ -1,7 +1,7 @@
 import { Schema, model, Types } from "mongoose";
 
 // 1. Create an interface representing a document in MongoDB.
-interface ISauce {
+export interface ISauce {
   userId: string;
   name: string;
   manufacturer: string;
@@ -14,7 +14,7 @@ interface ISauce {
   usersLiked: Types.Array<string>;
   usersDisliked: Types.Array<string>;
 }
-interface ISauceModel extends ISauce, Document {}
+export interface ISauceModel extends ISauce, Document {}
 
 // 2. Create a Schema corresponding to the document interface.
 const sauceSchema: Schema = new Schema({
@@ -32,4 +32,4 @@ const sauceSchema: Schema = new Schema({
 });
 
 // 3. Create a Model.
-export const Sauce = model<ISauceModel>("Sauces", sauceSchema);
+export default model<ISauceModel>("Sauce", sauceSchema);

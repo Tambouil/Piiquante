@@ -1,10 +1,11 @@
 import express from "express";
-const auth = require("../middlewares/auth");
+import auth from "../middlewares/Auth";
 import controller from "../controllers/Sauces";
+import multer from "../config/multer";
 
 const router = express.Router();
 
 router.get("/sauces", auth, controller.readSauce);
-router.post("/sauces", auth, controller.createSauce);
+router.post("/sauces", auth, multer, controller.createSauce);
 
 export = router;

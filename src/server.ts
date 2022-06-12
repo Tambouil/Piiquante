@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import http from "http";
+import path from "path";
 import { config } from "./config/config";
 import userRoutes from "./routes/User";
 import saucesRoutes from "./routes/Sauces";
@@ -43,6 +44,13 @@ const StartServer = () => {
   /** Routes */
   app.use("/api/auth", userRoutes);
   app.use("/api", saucesRoutes);
+  // app.use("./src/images", express.static(path.join(__dirname, "images")));
+  app.use(
+    "/src/public/images",
+    express.static(path.join(__dirname, "public/images"))
+  );
+  console.log(__dirname);
+  // app.use("/images", express.static(path.join(__dirname, "images")));
 
   /** Healthcheck */
   app.get("/", (req, res) => {
