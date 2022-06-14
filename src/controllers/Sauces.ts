@@ -28,18 +28,49 @@ const readOneSauce = async (req: Request, res: Response) => {
   }
 };
 
+const editSauce = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const sauceObject = req.file
+    ? {
+        ...JSON.parse(req.body.sauce),
+        imageUrl: `${req.protocol}://${req.get("host")}/src/public/images/${
+          req.file!.filename
+        }`,
+      }
+    : { ...req.body };
+  try {
+    const { id } = req.params;
+    const oneSauce = await Sauce.findById(id);
+    if (oneSauce!.userId && oneSauce!.userId !== req.auth!.userId) {
+      return res.status(403).json({ message: "Requête non autorisée" });
+    }
+    const sauceToUpdate = await Sauce.findByIdAndUpdate(id, { ...sauceObject });
+    if (sauceToUpdate == null) {
+      return res.status(404).json({ message: "Sauce is missing in database" });
+    }
+    res.status(200).json({ message: "Sauce edited !" });
+  } catch (error) {
+    res.status(409).json({ error });
+  }
+};
+
 const deleteSauce = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const oneSauce = await Sauce.findById(id);
+
+    if (oneSauce!.userId !== req.auth!.userId) {
+      return res.status(403).json({ message: "unauthorized request" });
+    }
+
     const sauceToDelete = await Sauce.findByIdAndDelete(id);
-    console.log(sauceToDelete);
     if (sauceToDelete) {
       const filename = sauceToDelete.imageUrl.split("/images/")[1];
       await unlink(`src/public/images/${filename}`);
       res.status(200).json({ message: "image deleted !" });
     }
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ error });
   }
 };
 
@@ -52,4 +83,4 @@ const readSauce = async (req: Request, res: Response) => {
   }
 };
 
-export default { readSauce, createSauce, readOneSauce, deleteSauce };
+export default { readSauce, createSauce, readOneSauce, editSauce, deleteSauce };
