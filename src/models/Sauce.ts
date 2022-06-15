@@ -1,6 +1,5 @@
 import { Schema, model, Types } from "mongoose";
 
-// 1. Create an interface representing a document in MongoDB.
 export interface ISauce {
   userId: string;
   name: string;
@@ -16,7 +15,6 @@ export interface ISauce {
 }
 export interface ISauceModel extends ISauce, Document {}
 
-// 2. Create a Schema corresponding to the document interface.
 const sauceSchema: Schema = new Schema({
   userId: { type: String },
   name: { type: String },
@@ -31,5 +29,4 @@ const sauceSchema: Schema = new Schema({
   usersDisliked: [{ type: String }],
 });
 
-// 3. Create a Model.
 export default model<ISauceModel>("Sauce", sauceSchema);

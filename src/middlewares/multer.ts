@@ -11,8 +11,8 @@ const storage = multer.diskStorage({
     file: Express.Multer.File,
     callback: DestinationCallback
   ): void => {
-    fs.mkdir("./src/public/images/", (err) => {
-      callback(null, "src/public/images");
+    fs.mkdir("./public/images/", (err) => {
+      callback(null, "./public/images");
     });
   },
 

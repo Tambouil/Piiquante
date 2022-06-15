@@ -44,10 +44,7 @@ const StartServer = () => {
   /** Routes */
   app.use("/api/auth", userRoutes);
   app.use("/api", saucesRoutes);
-  app.use(
-    "/src/public/images",
-    express.static(path.join(__dirname, "public/images"))
-  );
+  app.use("/public/images", express.static("public/images"));
 
   /** Healthcheck */
   app.get("/", (req, res) => {
