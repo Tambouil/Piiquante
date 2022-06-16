@@ -1,8 +1,8 @@
-import express, { Express } from "express";
+import express, { Express, Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import http from "http";
 import path from "path";
+import http from "http";
 import { config } from "./config/config";
 import userRoutes from "./routes/User";
 import saucesRoutes from "./routes/Sauces";
@@ -20,23 +20,19 @@ mongoose
 
 /** Only Start Server if MongoDB is connected */
 const StartServer = () => {
-  /** Log the request */
-  app.use((req, res, next) => {
-    /** Log the req */
+  app.use((req: Request, res: Response, next: NextFunction) => {
     console.log(
       `Incomming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`
     );
-
     res.on("finish", () => {
-      /** Log the res */
       console.log(
         `Result - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}] - STATUS: [${res.statusCode}]`
       );
     });
-
     next();
   });
 
+  /** Middlewares */
   app.use(cors());
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
@@ -44,7 +40,7 @@ const StartServer = () => {
   /** Routes */
   app.use("/api/auth", userRoutes);
   app.use("/api", saucesRoutes);
-  app.use("/public/images", express.static("public/images"));
+  app.use(express.static(path.join(__dirname, "../public")));
 
   /** Healthcheck */
   app.get("/", (req, res) => {
@@ -52,7 +48,7 @@ const StartServer = () => {
   });
 
   /** Error handling */
-  app.use((req, res) => {
+  app.use((req: Request, res: Response) => {
     const error = new Error("Not found");
     console.error(error);
     res.status(404).json({

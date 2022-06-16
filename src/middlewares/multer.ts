@@ -1,6 +1,7 @@
 import { Request } from "express";
 import multer, { FileFilterCallback } from "multer";
 import fs from "fs";
+import path from "path/posix";
 
 type DestinationCallback = (error: Error | null, destination: string) => void;
 type FileNameCallback = (error: Error | null, filename: string) => void;
@@ -11,8 +12,8 @@ const storage = multer.diskStorage({
     file: Express.Multer.File,
     callback: DestinationCallback
   ): void => {
-    fs.mkdir("./public/images/", (err) => {
-      callback(null, "./public/images");
+    fs.mkdir("public/images", (err) => {
+      callback(null, "public/images");
     });
   },
 
@@ -22,8 +23,7 @@ const storage = multer.diskStorage({
     callback: FileNameCallback
   ): void => {
     const name = file.originalname.split(".")[0].replace(/\s/g, "_");
-    const extension = file.mimetype.split("/")[1];
-    callback(null, name + Date.now() + "." + extension);
+    callback(null, name + Date.now() + path.extname(file.originalname));
   },
 });
 
@@ -43,6 +43,4 @@ const fileFilter = (
   }
 };
 
-export default multer({ storage: storage, fileFilter: fileFilter }).single(
-  "image"
-);
+export default multer({ storage, fileFilter }).single("image");
