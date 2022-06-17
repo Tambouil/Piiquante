@@ -23,6 +23,7 @@ specifiers:
   ts-node-dev: ^2.0.0
   typescript: ^4.7.3
   yup: ^0.32.11
+  yup-password: ^0.2.2
 
 dependencies:
   bcrypt: 5.0.1
@@ -34,6 +35,7 @@ dependencies:
   mongoose: 6.3.6
   multer: 1.4.5-lts.1
   yup: 0.32.11
+  yup-password: 0.2.2
 
 devDependencies:
   '@types/bcrypt': 5.0.0
@@ -1613,6 +1615,10 @@ packages:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
     engines: {node: '>=6'}
     dev: true
+
+  /yup-password/0.2.2:
+    resolution: {integrity: sha512-2PHfqGWtbXg4OfDV7VKFIb3hyEaYgTYpEORnFqgGAYqzENWmGzWMoeGvJg2Ohmq6maTRxhJzLZpNTITrqlZTrA==}
+    dev: false
 
   /yup/0.32.11:
     resolution: {integrity: sha512-Z2Fe1bn+eLstG8DRR6FTavGD+MeAwyfmouhHsIUgaADz8jvFKbO/fXc2trJKZg+5EBjh4gGm3iU/t3onKlXHIg==}

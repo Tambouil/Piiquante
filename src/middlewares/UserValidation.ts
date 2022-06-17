@@ -1,10 +1,19 @@
-import * as Yup from "yup";
 import { Request, Response, NextFunction } from "express";
+import * as Yup from "yup";
+import YupPassword from "yup-password";
+
+YupPassword(Yup);
 
 const userSchema = Yup.object().shape({
   email: Yup.string().email().required(),
-  password: Yup.string().min(3).required(),
+  password: Yup.string().password().required(),
 });
+// => [
+//   'password must be at least 8 characters',
+//   'password must contain at least 1 uppercase letter',
+//   'password must contain at least 1 number',
+//   'password must contain at least 1 symbol',
+// ]
 
 export = async (req: Request, res: Response, next: NextFunction) => {
   try {
