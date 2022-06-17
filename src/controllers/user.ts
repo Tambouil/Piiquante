@@ -21,12 +21,12 @@ const signup = async (req: Request, res: Response) => {
 const login = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ error: "User not found !" });
     }
-    const validPwd = await bcrypt.compare(password, user.password);
-    if (!validPwd) {
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
       return res.status(403).json({ error: "Wrong password !" });
     }
     res.status(200).json({
